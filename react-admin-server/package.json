@@ -1,0 +1,20 @@
+{
+  "name": "react-admin-server",
+  "version": "1.0.0",
+  "description": "react-admin server project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "pubdreamcc (493310907@qq.com)",
+  "license": "ISC",
+  "dependencies": {
+    "blueimp-md5": "^2.10.0",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.17.1",
+    "mongoose": "^5.6.4",
+    "multer": "^1.4.1"
+  }
+}
