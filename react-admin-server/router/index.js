@@ -11,6 +11,9 @@ const RoleModel = require('../models/RoleModel')
 // 得到路由器对象
 const router = express.Router()
 
+// 指定需要过滤的属性
+const filter = {password: 0, __v: 0}
+
 /*
 得到指定数组的分页信息对象
  */
