@@ -1,12 +1,23 @@
 import React, { Component } from 'react'
 import { Form, Icon, Input, Button, } from 'antd'
 import './login.less'
-export default class Login extends Component {
+class Login extends Component {
   handleSubmit = (e) => {
     //表单有默认提交行为，阻止事件默认行为
     e.preventDefault()
+    // 统一对表单数据进行一次验证
+    this.props.form.validateFields((error, values) => {
+      if (error) {
+        console.log(error)
+      } else {
+        // 前台表单验证通过， 发送Ajax请求登录用户
+        const {userName, password} = values
+        console.log(`用户名：${userName}，密码：${password}`)
+      }
+    })
   }
   render() {
+    const {getFieldDecorator} = this.props.form
     return (
       <div className='login'>
         <header className='login-header'>
@@ -17,17 +28,29 @@ export default class Login extends Component {
           <h2>用户登录</h2>
           <Form onSubmit={this.handleSubmit} className="login-form">
             <Form.Item>
-                <Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Username"
-                />
+              {
+                getFieldDecorator('userName', {
+                  rules: [{max: 12, message: '用户名至多12位'}, {min: 4, message: '用户名至少4位'}, {required: true, message: '用户名必须填写'}, {whitespace: true, message: '用户名不能包含空格'}]
+                })(
+                  <Input
+                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="用户名"
+                  />
+                )
+              }                
             </Form.Item>
             <Form.Item>
-                <Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="password"
-                  placeholder="Password"
-                />
+              {
+                getFieldDecorator('password', {
+                  rules: [{max: 20, message: '密码至多20位'}, {min: 4, message: '密码至少4位'}, {required: true, message: '密码必须填写'}, {whitespace: true, message: '密码不能包含空格'}, {pattern: /^[A-Za-z_0-9]+$/, message: '密码必须由字母下划线或数字组成'}]
+                })(
+                  <Input
+                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    type="password"
+                    placeholder="密码"
+                  />
+                )
+              }
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType="submit" className="login-form-button">
@@ -40,3 +63,6 @@ export default class Login extends Component {
     )
   }
 }
+const WrapLogin = Form.create()(Login)
+
+export default WrapLogin
