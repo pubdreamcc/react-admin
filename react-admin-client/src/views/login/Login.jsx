@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button, } from 'antd'
+import { Form, Icon, Input, Button, message} from 'antd'
 import './login.less'
+import { loginIf } from '../../api/index'
 class Login extends Component {
   handleSubmit = (e) => {
     //表单有默认提交行为，阻止事件默认行为
@@ -12,7 +13,18 @@ class Login extends Component {
       } else {
         // 前台表单验证通过， 发送Ajax请求登录用户
         const {userName, password} = values
-        console.log(`用户名：${userName}，密码：${password}`)
+        loginIf({username: userName, password: password}).then(res => {
+          const status = res.data.status
+          if (status === 0) {
+            // 成功
+            console.log(res.data.data)
+            console.log(document.cookie)
+          } else {
+            // 失败
+            const errmes = res.data.msg
+            message.error(errmes)
+          }
+        })
       }
     })
   }
