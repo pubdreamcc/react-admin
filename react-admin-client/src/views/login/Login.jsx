@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
+import {Redirect} from 'react-router-dom'
 import { Form, Icon, Input, Button, message} from 'antd'
+import storageUtils from '../../utils/storageUtils'
+import memoryUtils from '../../utils/memoryUtils'
 import './login.less'
 import { loginIf } from '../../api/index'
 class Login extends Component {
@@ -7,28 +10,33 @@ class Login extends Component {
     //表单有默认提交行为，阻止事件默认行为
     e.preventDefault()
     // 统一对表单数据进行一次验证
-    this.props.form.validateFields((error, values) => {
+    this.props.form.validateFields(async (error, values) => {
       if (error) {
         console.log(error)
       } else {
         // 前台表单验证通过， 发送Ajax请求登录用户
         const {userName, password} = values
-        loginIf({username: userName, password: password}).then(res => {
-          const status = res.data.status
-          if (status === 0) {
-            // 成功
-            console.log(res.data.data)
-            console.log(document.cookie)
-          } else {
-            // 失败
-            const errmes = res.data.msg
-            message.error(errmes)
-          }
-        })
+        // 使用 result 接收异步请求成功得到的结果，请求失败内部自己已经处理
+        const result = await loginIf({username: userName, password: password})
+        if (result.status === 0) {
+          // 保存user数据到内存
+          memoryUtils.user = result.data
+          // 保存user数据到localStorage
+          storageUtils.savaUser(result.data)
+          // 登录成功，跳转路由 '/'
+          this.props.history.replace('/')
+        } else {
+          // 登录失败，提示失败信息
+          message.error(result.msg)
+        }
       }
     })
   }
   render() {
+    if (memoryUtils.user._id && memoryUtils.user.username) {
+      // 用户已经登录，跳转到管理页（/）
+      return <Redirect to='/'/>
+    }
     const {getFieldDecorator} = this.props.form
     return (
       <div className='login'>
