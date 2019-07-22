@@ -24,7 +24,7 @@ export default class Admin extends Component {
         <Sider><LeftNav/></Sider>
         <Layout>
           <Header></Header>
-          <Content>
+          <Content style={{backgroundColor: '#fff'}}>
             <Switch>
               <Route path='/home' component={Home}></Route>
               <Route path='/user' component={User}></Route>
@@ -34,6 +34,7 @@ export default class Admin extends Component {
               <Route path='/charts/pie' component={Pie}></Route>
               <Route path='/charts/line' component={Line}></Route>
               <Route path='/charts/bar' component={Bar}></Route>
+              <Redirect to='/home'></Redirect>
             </Switch>
           </Content>
           <Footer style={{textAlign: 'center', color: 'rgba(204, 204, 204, 1)'}}>推荐使用Google浏览器，可以获得更加页面操作体验</Footer>
