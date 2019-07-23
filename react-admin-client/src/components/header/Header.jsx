@@ -5,6 +5,7 @@ import formatDate from '../../utils/dateUtils'
 import menuList from '../../config/menuConfig'
 import { weatherIf } from '../../api/index'
 import memoryUtils from '../../utils/memoryUtils'
+import storageUtils from '../../utils/storageUtils'
 import './header.less'
 const { confirm } = Modal
 class Header extends Component {
@@ -45,11 +46,12 @@ class Header extends Component {
       content: '确定退出吗？',
       okText: '确定',
       cancelText: '取消',
-      onOk(fn) {
-        console.log(fn(), '确定')
-      },
-      onCancel(fn) {
-        console.log(fn(), '取消')
+      onOk:() => {
+        // 清除 user 数据
+        memoryUtils.user = {}
+        storageUtils.removeUser()
+        // 跳转路由到 /login
+        this.props.history.replace('/login')
       }
     })
   }
