@@ -50,7 +50,8 @@ class Login extends Component {
             <Form.Item>
               {
                 getFieldDecorator('userName', {
-                  rules: [{max: 12, message: '用户名至多12位'}, {min: 4, message: '用户名至少4位'}, {required: true, message: '用户名必须填写'}, {whitespace: true, message: '用户名不能包含空格'}]
+                  rules: [{max: 12, message: '用户名至多12位'}, {min: 4, message: '用户名至少4位'}, {required: true, message: '用户名必须填写'}, {whitespace: true, message: '用户名不能包含空格'}],
+                  initialValue: 'admin'
                 })(
                   <Input
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}

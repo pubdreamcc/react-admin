@@ -12,6 +12,8 @@
 
 * ES6 （async/await）
 
+* jsonp（发jsonp请求）
+
 * axios （封装Ajax请求函数）
 
 * Ant Design（组件按需加载）

@@ -7,6 +7,7 @@
     "axios": "^0.19.0",
     "babel-plugin-import": "^1.12.0",
     "customize-cra": "^0.2.14",
+    "jsonp": "^0.2.1",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "react": "^16.8.6",
