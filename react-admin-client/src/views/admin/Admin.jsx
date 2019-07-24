@@ -20,11 +20,11 @@ export default class Admin extends Component {
       return <Redirect to='/login' />
     }
     return (
-      <Layout style={{height: '100%'}}>
+      <Layout style={{minHeight: '100%'}}>
         <Sider><LeftNav/></Sider>
         <Layout>
           <Header></Header>
-          <Content style={{backgroundColor: '#fff'}}>
+          <Content style={{backgroundColor: '#fff', margin: '15px'}}>
             <Switch>
               <Route path='/home' component={Home}></Route>
               <Route path='/user' component={User}></Route>
