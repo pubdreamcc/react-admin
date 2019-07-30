@@ -19,6 +19,13 @@ export const updateCategoryIf = (categoryId, categoryName) => ajax('/manage/cate
 
 export const addCategoryIf = (parentId, categoryName) => ajax('/manage/category/add', {parentId, categoryName}, 'POST')
 
+// 获取商品分页列表
+
+export const getProductListIf = (pageNum, pageSize) => ajax('/manage/product/list', {pageNum, pageSize})
+
+// 根据名称或描述搜索商品列表 （searchType：productName（名称）/productDesc（描述）） searchName：搜索关键字
+
+export const searchProductIf = (pageNum, pageSize, searchType, searchName) => ajax('/manage/product/search', {pageNum, pageSize, [searchType]: searchName})
 
 // 获取天气
 export const weatherIf = (city) => {
