@@ -9,7 +9,7 @@ class LeftNav extends Component {
     this.props.history.push(key)
   }
   getMenuNodes = (menuList) => {
-    const path = this.props.location.pathname
+    const path = this.props.location.pathname.replace(/^\/product[\D]+/, '/product')
     return (
       menuList.map(item => {
         if (!item.children) {
@@ -46,7 +46,7 @@ class LeftNav extends Component {
     this.menu = this.getMenuNodes(menuList)
   }
   render() {
-    const path = this.props.location.pathname
+    const path = this.props.location.pathname.replace(/^\/product[\D]+/, '/product')
     return (
       <div className='left-nav'>
         <Link to='/home' className='left-nav-header'>

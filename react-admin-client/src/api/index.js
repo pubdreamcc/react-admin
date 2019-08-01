@@ -27,6 +27,10 @@ export const getProductListIf = (pageNum, pageSize) => ajax('/manage/product/lis
 
 export const searchProductIf = (pageNum, pageSize, searchType, searchName) => ajax('/manage/product/search', {pageNum, pageSize, [searchType]: searchName})
 
+// 上/下架商品
+
+export const updateStatusIf = (productId, status) => ajax('/manage/product/updateStatus', {productId, status}, 'POST')
+
 // 获取天气
 export const weatherIf = (city) => {
   return new Promise((resolve, reject) => {

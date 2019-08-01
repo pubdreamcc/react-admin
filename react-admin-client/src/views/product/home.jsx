@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {getProductListIf, searchProductIf} from '../../api'
+import {getProductListIf, searchProductIf, updateStatusIf} from '../../api'
 import {PAGE_SIZE} from '../../utils/constance'
 import {
   Card,
@@ -7,8 +7,10 @@ import {
   Table,
   Icon,
   Select,
-  Input
+  Input,
+  message
 } from 'antd'
+import memoryUtils from '../../utils/memoryUtils.js'
 const Option = Select.Option
 export default class ProductHome extends Component {
   state = {
@@ -17,6 +19,18 @@ export default class ProductHome extends Component {
     loading: false, // 表格数据是否加载中
     searchType: 'productName', // 根据那个字段搜索
     searchName: '' // 搜索关键字
+  }
+  /*
+    对商品进行上下架
+  */
+  updateStatus = async (productId, status) => {
+    // 发ajax对商品进行上下架
+    const ret = await updateStatusIf(productId, status)
+    if (ret.status === 0) {
+      // 上下架成功
+      message.success('更新成功！')
+      this.getProductList(this.pageNum)
+    }
   }
   /*
     获取商品分页列表
@@ -62,15 +76,35 @@ export default class ProductHome extends Component {
       },
       {
         title: '状态',
-        render: () => <span>状态</span>
+        render: (product) => {
+          const {status, _id} = product
+          return (<span style={{display: 'flex', flexDirection: 'column'}}><Button type='primary' onClick={this.updateStatus.bind(this, _id, status === 1 ? 2 : 1)}>{status === 1 ? '下架' : '上架'}</Button><span>{status === 1 ? '在售' : '已下架'}</span></span>)
+        }
       },
       {
         title: '操作',
-        render: () => <a href="javascript:;"><span>详情</span><span>修改</span></a>
+        render: (product) => <a href="javascript:;"><span style={{marginRight: 15}} onClick={this.showDetail.bind(this, product)}>详情</span><span onClick={this.showUpdate.bind(this, product)}>修改</span></a>
       }
     ]
   }
-
+  /*
+    显示商品详情路由
+ */
+  showDetail = (product) => {
+    // 保存商品信息到内存
+    memoryUtils.product = product
+    // 跳转路由
+    this.props.history.push('/product/detail')
+  }
+  /*
+    显示商品修改路由
+  */
+  showUpdate = product => {
+    // 保存商品信息到内存
+    memoryUtils.product = product
+    // 跳转路由
+    this.props.history.push('/product/addupdate')
+  }
   componentWillMount () {
     // 获取商品列表
     this.getProductList(1)
@@ -89,7 +123,7 @@ export default class ProductHome extends Component {
         <Button type='primary' onClick={this.getProductList.bind(this, 1)}>搜索</Button>
       </span>
     )
-    const extra = <Button type='primary'><Icon type='plus'></Icon>添加商品</Button>
+    const extra = <Button type='primary' onClick={() => this.props.history.push('/product/addupdate')}><Icon type='plus'></Icon>添加商品</Button>
     return (
       <Card title={title} extra={extra}>
         <Table

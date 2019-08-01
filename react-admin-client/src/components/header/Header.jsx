@@ -22,7 +22,7 @@ class Header extends Component {
     }, 1000)
   }
   getTitle = (menuList) => {
-    const path = this.props.location.pathname
+    const path = this.props.location.pathname.replace(/^\/product[\D]+/, '/product')
     // 通过当前路由找到对应的菜单项名称
     let title
     menuList.forEach(item => {
