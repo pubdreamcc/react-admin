@@ -92,9 +92,9 @@ export default class ProductHome extends Component {
  */
   showDetail = (product) => {
     // 保存商品信息到内存
-    memoryUtils.product = product
+    // memoryUtils.product = product
     // 跳转路由
-    this.props.history.push('/product/detail')
+    this.props.history.push({pathname: '/product/detail', state: product})
   }
   /*
     显示商品修改路由

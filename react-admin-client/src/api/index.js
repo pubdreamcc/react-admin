@@ -19,6 +19,10 @@ export const updateCategoryIf = (categoryId, categoryName) => ajax('/manage/cate
 
 export const addCategoryIf = (parentId, categoryName) => ajax('/manage/category/add', {parentId, categoryName}, 'POST')
 
+// 获取分类名称（单个）
+
+export const getCategoryIf = (categoryId) => ajax('/manage/category/info', {categoryId})
+
 // 获取商品分页列表
 
 export const getProductListIf = (pageNum, pageSize) => ajax('/manage/product/list', {pageNum, pageSize})
