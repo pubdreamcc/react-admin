@@ -10,6 +10,7 @@ import {
   Input,
   message
 } from 'antd'
+import LinkButton from '../../components/link-button/LinkButton'
 import memoryUtils from '../../utils/memoryUtils.js'
 const Option = Select.Option
 export default class ProductHome extends Component {
@@ -83,7 +84,7 @@ export default class ProductHome extends Component {
       },
       {
         title: '操作',
-        render: (product) => <a href="javascript:;"><span style={{marginRight: 15}} onClick={this.showDetail.bind(this, product)}>详情</span><span onClick={this.showUpdate.bind(this, product)}>修改</span></a>
+        render: (product) => <LinkButton><span style={{marginRight: 15}} onClick={this.showDetail.bind(this, product)}>详情</span><span onClick={this.showUpdate.bind(this, product)}>修改</span></LinkButton>
       }
     ]
   }
@@ -92,9 +93,9 @@ export default class ProductHome extends Component {
  */
   showDetail = (product) => {
     // 保存商品信息到内存
-    // memoryUtils.product = product
+    memoryUtils.product = product
     // 跳转路由
-    this.props.history.push({pathname: '/product/detail', state: product})
+    this.props.history.push('/product/detail')
   }
   /*
     显示商品修改路由

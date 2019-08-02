@@ -127,10 +127,10 @@ export default class Category extends Component {
         title: '操作',
         render: (category) => {
         return (
-          <a href='javascript:;'>
+          <span>
             <Button size='small' style={{marginRight: 10}} type='primary' onClick={this.showUpdate.bind(this, category)}>修改分类</Button>
             {this.state.parentId === '0' ? <Button size='small' type='primary' onClick={this.showSubCategory.bind(this, category)}>查看子分类</Button> : null}
-          </a>
+          </span>
           )
         },
         width: 300

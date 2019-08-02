@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {List, Icon, Card, Button} from 'antd'
-// import memoryUtils  from '../../utils/memoryUtils.js'
+import memoryUtils  from '../../utils/memoryUtils.js'
 import { BASE_IMG_URL } from '../../utils/constance.js'
 import {getCategoryIf} from '../../api/index'
 const Item = List.Item
@@ -10,7 +10,7 @@ export default class ProductDetail extends Component {
     categoryName2: '', // 二级分类名称
   }
   async componentDidMount () {
-    const {pCategoryId, categoryId} = this.props.location.state
+    const {pCategoryId, categoryId} = memoryUtils.product
     // 发送请求获取商品的分类名称
     if (pCategoryId === '0') {
       // 当前商品属于一级分类
@@ -28,7 +28,7 @@ export default class ProductDetail extends Component {
     }
   }
   render() {
-    const {desc, detail, imgs, name, price} = this.props.location.state
+    const {desc, detail, imgs, name, price} = memoryUtils.product
     const {categoryName1, categoryName2} = this.state
     const title = (<span><Button type='primary' style={{marginRight: 10}} onClick={this.props.history.goBack.bind(this)}><Icon type='arrow-left'/></Button>商品详情</span>)
     return (
