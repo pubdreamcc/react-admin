@@ -5,9 +5,9 @@ import {
   Button,
   Form,
   Input,
-  Cascader,
-  Upload
+  Cascader
 } from 'antd'
+import PictureWall from './picture-wall'
 import { categoryIf } from '../../api/index'
 const { Item } = Form
 const { TextArea } = Input
@@ -147,7 +147,7 @@ class ProductAddUpdate extends Component {
             )}
           </Item>
           <Item label='商品图片'>
-            <Upload></Upload>
+            <PictureWall></PictureWall>
           </Item>
           <Item label='商品详情'>
             <div>商品详情</div>
