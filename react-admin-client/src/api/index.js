@@ -35,6 +35,10 @@ export const searchProductIf = (pageNum, pageSize, searchType, searchName) => aj
 
 export const updateStatusIf = (productId, status) => ajax('/manage/product/updateStatus', {productId, status}, 'POST')
 
+// 删除商品图片
+
+export const deleteProductImgIf = (name) => ajax('/manage/img/delete', { name }, 'POST')
+
 // 获取天气
 export const weatherIf = (city) => {
   return new Promise((resolve, reject) => {
