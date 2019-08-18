@@ -12,6 +12,7 @@ import {
 } from 'antd'
 import LinkButton from '../../components/link-button/LinkButton'
 import memoryUtils from '../../utils/memoryUtils.js'
+import storageUtils from '../../utils/storageUtils.js'
 const Option = Select.Option
 export default class ProductHome extends Component {
   state = {
@@ -92,15 +93,19 @@ export default class ProductHome extends Component {
     显示商品详情路由
  */
   showDetail = (product) => {
+    // 保存商品到local storage
+    storageUtils.saveProduct(product)
     // 保存商品信息到内存
     memoryUtils.product = product
     // 跳转路由
     this.props.history.push('/product/detail')
   }
   /*
-    显示商品修改路由
+    显示商品修改/添加路由
   */
   showUpdate = product => {
+    // 保存商品到local storage
+    storageUtils.saveProduct(product)
     // 保存商品信息到内存
     memoryUtils.product = product
     // 跳转路由
@@ -124,7 +129,7 @@ export default class ProductHome extends Component {
         <Button type='primary' onClick={this.getProductList.bind(this, 1)}>搜索</Button>
       </span>
     )
-    const extra = <Button type='primary' onClick={() => this.props.history.push('/product/addupdate')}><Icon type='plus'></Icon>添加商品</Button>
+    const extra = <Button type='primary' onClick={this.showUpdate.bind(this, {})}><Icon type='plus'></Icon>添加商品</Button>
     return (
       <Card title={title} extra={extra}>
         <Table

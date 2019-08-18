@@ -9,6 +9,7 @@ import {
 } from 'antd'
 import PictureWall from './picture-wall'
 import { categoryIf } from '../../api/index'
+import memoryUtils from '../../utils/memoryUtils.js'
 const { Item } = Form
 const { TextArea } = Input
 class ProductAddUpdate extends Component {
@@ -101,6 +102,12 @@ class ProductAddUpdate extends Component {
       }
     }
   }
+  componentWillMount () {
+    // 取出memoryUtils 中的 product
+    const product = memoryUtils.product
+    this.product = product
+    this.isUpdate = product === {} ? false : true
+  }
   componentDidMount () {
     // 获取商品的一级分类
     this.getCategories('0')
@@ -111,7 +118,20 @@ class ProductAddUpdate extends Component {
       wrapperCol: { span: 8 },
     }
     const {getFieldDecorator} = this.props.form
-    const isUpdate = false
+    const {product, isUpdate} = this
+    const {pCategoryId, categoryId} = product
+    const categoryIds = []
+    if (isUpdate) {
+      // 如果商品是一级分类商品
+      if (pCategoryId === '0') {
+        categoryIds.push(categoryId)
+      } else {
+        // 商品是二级分类下的商品
+        categoryIds.push(pCategoryId)
+        categoryIds.push(categoryId)
+      }
+      
+    }
     const title = (<span><Button type='primary' onClick={() => this.props.history.goBack()} style={{marginRight: 10}}><Icon type='arrow-left'/></Button>{isUpdate ? '修改商品' : '添加商品'}</span>)
     return (
       <Card title={title}>
@@ -119,25 +139,25 @@ class ProductAddUpdate extends Component {
           <Item label='商品名称'>
             {getFieldDecorator('name', {
               rules: [{required: true, message: '商品名称必须输入'}],
-              initialValue: ''
+              initialValue: product.name
             })(<Input placeholder='请输入商品名称'></Input>)}
           </Item>
           <Item label='商品描述'>
             {getFieldDecorator('desc', {
               rules: [{required: true, message: '商品描述必须输入'}],
-              initialValue: ''
+              initialValue: product.desc
             })(<TextArea placeholder='请输入商品描述' autosize={{ minRows: 2, maxRows: 6 }}></TextArea>)}
           </Item>
           <Item label='商品价格'>
             {getFieldDecorator('price', {
               rules: [{required: true, message: '商品价格必须有'}, {validator: this.validatePrice}],
-              initialValue: ''
+              initialValue: product.price
             })(<Input type='number' placeholder='请输入商品价格' addonAfter='元'/>)}
           </Item>
           <Item label='商品分类'>
-            {getFieldDecorator('categoryId', {
+            {getFieldDecorator('categoryIds', {
               rules: [{required: true, message: '商品必须有分类'}],
-              initialValue: ''
+              initialValue: categoryIds
             })(
               <Cascader
                 options={this.state.options}
