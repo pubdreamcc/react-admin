@@ -1,6 +1,7 @@
 // 展示商品图片的组件
 import React, { Component } from 'react'
 import { Upload, Icon, Modal, message} from 'antd'
+import propTypes from 'prop-types'
 import { BASE_IMG_URL } from '../../utils/constance'
 import { deleteProductImgIf } from '../../api/index'
 function getBase64(file) {
@@ -12,6 +13,9 @@ function getBase64(file) {
   })
 }
 export default class PictureWall extends Component {
+  static propTypes = {
+    imgs: propTypes.array
+  }
   constructor (props) {
     super(props)
     let fileList = []
@@ -30,6 +34,13 @@ export default class PictureWall extends Component {
       previewImage: '', // 大图的url地址
       fileList // 已经上传的图片文件对象数组
     }
+  }
+
+  /*
+    获取所有已经上传的图片文件名数组
+ */
+  getImgs = () => {
+    return this.state.fileList.map(file => file.name)
   }
   /*
     操作预览大图
@@ -81,13 +92,13 @@ export default class PictureWall extends Component {
     const uploadButton = (
       <div>
         <Icon type="plus" />
-        <div className="ant-upload-text">Upload</div>
+        <div>Upload</div>
       </div>
     )
     return (
       <div>
         <Upload
-          fileList={fileList}
+          fileList={fileList} // 所有已经上传的图片文件对象数组
           accept='image/*' // 只接受图片类型
           action='/manage/img/upload' // 图片的上传地址
           listType='picture-card'

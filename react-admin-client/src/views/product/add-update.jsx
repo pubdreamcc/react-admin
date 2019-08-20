@@ -13,6 +13,12 @@ import memoryUtils from '../../utils/memoryUtils.js'
 const { Item } = Form
 const { TextArea } = Input
 class ProductAddUpdate extends Component {
+  constructor (props) {
+    super(props)
+    // 创建用来保存ref标识的标签对象的容器
+    this.pw = React.createRef()
+    // this.editor = React.createRef()
+  }
   state = {
     options: [] // 商品分类级联选择的数据数组
   }
@@ -58,6 +64,7 @@ class ProductAddUpdate extends Component {
       if (!errors) {
         // 表单验证成功
         console.log(values)
+        console.log(this.pw.current.getImgs())
       } else{
         console.log(errors)
       }
@@ -76,12 +83,26 @@ class ProductAddUpdate extends Component {
   /*
     初始化state 中的 options
   */
-  initOptions = (categories) => {
+  initOptions = async (categories) => {
     const options = categories.map(c => ({
       value: c._id,
       label: c.name,
       isLeaf: false // 默认当前一级分类不是叶子
     }))
+    const {product, isUpdate} = this
+    const {pCategoryId} = product
+    if (pCategoryId !== '0' && isUpdate) {
+      // 当前商品属于二级分类下的商品，为该商品准备对应一级分类下的二级分类数据数组
+      const subCategories = await this.getCategories(pCategoryId)
+      const childOptions = subCategories.map(c => ({
+        value: c._id,
+        label: c.name,
+        isLeaf: true // 二级分类都是叶子
+      }))
+      // 关联到当前一级分类 options 上面
+      const targetOption = options.find(o => o.value === pCategoryId)
+      targetOption.children = childOptions
+    }
     // 更新options
     this.setState({options})
   }
@@ -106,7 +127,8 @@ class ProductAddUpdate extends Component {
     // 取出memoryUtils 中的 product
     const product = memoryUtils.product
     this.product = product
-    this.isUpdate = product === {} ? false : true
+    // 利用JSON.stringify() 将对象转换成JSON字符串进行比较
+    this.isUpdate = (JSON.stringify(product) === '{}' ? false : true)
   }
   componentDidMount () {
     // 获取商品的一级分类
@@ -119,7 +141,7 @@ class ProductAddUpdate extends Component {
     }
     const {getFieldDecorator} = this.props.form
     const {product, isUpdate} = this
-    const {pCategoryId, categoryId} = product
+    const {pCategoryId, categoryId, imgs} = product
     const categoryIds = []
     if (isUpdate) {
       // 如果商品是一级分类商品
@@ -167,7 +189,7 @@ class ProductAddUpdate extends Component {
             )}
           </Item>
           <Item label='商品图片'>
-            <PictureWall></PictureWall>
+            <PictureWall imgs={imgs} ref={this.pw}></PictureWall>
           </Item>
           <Item label='商品详情'>
             <div>商品详情</div>
