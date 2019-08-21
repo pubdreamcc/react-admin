@@ -8,6 +8,7 @@ import {
   Cascader
 } from 'antd'
 import PictureWall from './picture-wall'
+import RichTextEditor from './RichTextEditor'
 import { categoryIf } from '../../api/index'
 import memoryUtils from '../../utils/memoryUtils.js'
 const { Item } = Form
@@ -17,7 +18,7 @@ class ProductAddUpdate extends Component {
     super(props)
     // 创建用来保存ref标识的标签对象的容器
     this.pw = React.createRef()
-    // this.editor = React.createRef()
+    this.editor = React.createRef()
   }
   state = {
     options: [] // 商品分类级联选择的数据数组
@@ -65,6 +66,7 @@ class ProductAddUpdate extends Component {
         // 表单验证成功
         console.log(values)
         console.log(this.pw.current.getImgs())
+        console.log(this.editor.current.getDetail())
       } else{
         console.log(errors)
       }
@@ -191,8 +193,8 @@ class ProductAddUpdate extends Component {
           <Item label='商品图片'>
             <PictureWall imgs={imgs} ref={this.pw}></PictureWall>
           </Item>
-          <Item label='商品详情'>
-            <div>商品详情</div>
+          <Item label='商品详情' labelCol={{span: 2}} wrapperCol={{span: 20}}>
+            <RichTextEditor ref={this.editor}/>
           </Item>
           <Item>
             <Input type='submit' value='提交' style={{width: '20%', lineHeight: '0', backgroundColor: '#1DA57A', color: 'white'}}></Input>

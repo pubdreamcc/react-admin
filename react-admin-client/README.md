@@ -10,6 +10,8 @@
 
 * echarts
 
+* react-draft-wysiwyg （React 富文本编辑器插件）
+
 * ES6 （async/await）
 
 * jsonp（发jsonp请求）
