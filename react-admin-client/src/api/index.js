@@ -47,6 +47,10 @@ export const updateProductInfoIf = (productInfo) => ajax('/manage/product/update
 
 export const addProduct = (product) => ajax('/manage/product/add', product, 'POST')
 
+// 获取角色列表
+
+export const getRoles = () => ajax('/manage/role/list')
+
 // 获取天气
 export const weatherIf = (city) => {
   return new Promise((resolve, reject) => {
