@@ -5,11 +5,12 @@ import {
   Button,
   Form,
   Input,
-  Cascader
+  Cascader,
+  message
 } from 'antd'
 import PictureWall from './picture-wall'
 import RichTextEditor from './RichTextEditor'
-import { categoryIf } from '../../api/index'
+import { categoryIf, updateProductInfoIf, addProduct } from '../../api/index'
 import memoryUtils from '../../utils/memoryUtils.js'
 const { Item } = Form
 const { TextArea } = Input
@@ -61,12 +62,44 @@ class ProductAddUpdate extends Component {
   submit = (e) => {
     e.preventDefault()
     // 对表单进行统一验证
-    this.props.form.validateFields((errors, values) => {
+    this.props.form.validateFields(async (errors, values) => {
       if (!errors) {
-        // 表单验证成功
-        console.log(values)
-        console.log(this.pw.current.getImgs())
-        console.log(this.editor.current.getDetail())
+        // 表单验证成功，发送请求更新/添加商品
+        const {name, desc, price, categoryIds} = values
+        let pCategoryId, categoryId
+        if (categoryIds.length > 1) {
+          // 该商品是二级分类下的商品
+          pCategoryId = categoryIds[0]
+          categoryId = categoryIds[1]
+        } else {
+          // 该商品是一级分类下的商品
+          pCategoryId = '0'
+          categoryId = categoryIds[0]
+        }
+        const imgs = this.pw.current.getImgs()
+        const detail = this.editor.current.getDetail()
+        if (this.isUpdate) {
+          // 更新商品信息
+          const _id = this.product._id
+          const productInfo = {_id, categoryId, pCategoryId, name, desc, price, imgs, detail}
+          const ret = await updateProductInfoIf(productInfo)
+          if (ret.status === 0) {
+            message.success('更新商品成功！')
+            this.props.history.replace('/product')
+          } else {
+            message.error('更新商品失败！')
+          }
+        } else {
+          // 添加商品
+          const product = {categoryId, pCategoryId, name, desc, price, imgs, detail}
+          const ret = await addProduct(product)
+          if (ret.status === 0) {
+            message.success('添加商品成功！')
+            this.props.history.replace('/product')
+          } else {
+            message.error('添加商品失败！')
+          }
+        }
       } else{
         console.log(errors)
       }
@@ -143,7 +176,7 @@ class ProductAddUpdate extends Component {
     }
     const {getFieldDecorator} = this.props.form
     const {product, isUpdate} = this
-    const {pCategoryId, categoryId, imgs} = product
+    const {pCategoryId, categoryId, imgs, detail} = product
     const categoryIds = []
     if (isUpdate) {
       // 如果商品是一级分类商品
@@ -194,7 +227,7 @@ class ProductAddUpdate extends Component {
             <PictureWall imgs={imgs} ref={this.pw}></PictureWall>
           </Item>
           <Item label='商品详情' labelCol={{span: 2}} wrapperCol={{span: 20}}>
-            <RichTextEditor ref={this.editor}/>
+            <RichTextEditor ref={this.editor} detail={detail}/>
           </Item>
           <Item>
             <Input type='submit' value='提交' style={{width: '20%', lineHeight: '0', backgroundColor: '#1DA57A', color: 'white'}}></Input>

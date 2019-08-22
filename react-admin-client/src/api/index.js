@@ -39,6 +39,14 @@ export const updateStatusIf = (productId, status) => ajax('/manage/product/updat
 
 export const deleteProductImgIf = (name) => ajax('/manage/img/delete', { name }, 'POST')
 
+// 更新商品信息
+
+export const updateProductInfoIf = (productInfo) => ajax('/manage/product/update', productInfo, 'POST')
+
+// 添加商品
+
+export const addProduct = (product) => ajax('/manage/product/add', product, 'POST')
+
 // 获取天气
 export const weatherIf = (city) => {
   return new Promise((resolve, reject) => {
