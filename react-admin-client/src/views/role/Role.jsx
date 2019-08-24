@@ -8,14 +8,21 @@ import{
 } from 'antd'
 import AddForm from './add-form'
 import AuthForm from './auth-form'
-import { getRoles, addRole } from '../../api/index'
+import { getRoles, addRole, updateRole } from '../../api/index'
 import {PAGE_SIZE} from '../../utils/constance'
+import formatDate from '../../utils/dateUtils.js'
+import memoryUtils from '../../utils/memoryUtils.js'
 export default class Role extends Component {
   state = {
     roles: [], // 所有角色列表
     role: {}, // 选中的role
     visible: false, // modal 对话框是否可见（添加角色）
     authVisible: false // modal 对话框是否可见（角色授权）
+  }
+
+  constructor (props) {
+    super(props)
+    this.auth = React.createRef()
   }
   
   initColumns = () => {
@@ -26,11 +33,13 @@ export default class Role extends Component {
       },
       {
         dataIndex: 'create_time',
-        title: '创建时间'
+        title: '创建时间',
+        render: formatDate
       },
       {
         dataIndex: 'auth_time',
-        title: '授权时间'
+        title: '授权时间',
+        render: formatDate
       },
       {
         dataIndex: 'auth_name',
@@ -60,6 +69,28 @@ export default class Role extends Component {
         // 表格行点击时的回调
         this.setState({role})
       }
+    }
+  }
+
+  /*
+    角色授权
+  */
+  handleAuthRole = async () => {
+    // 收集子组件checkedKeys状态
+    const menus = this.auth.current.getMenus()
+    const {role} = this.state
+    role.menus = menus
+    role.auth_time = Date.now()
+    role.auth_name = memoryUtils.user.username
+    const ret = await updateRole(role)
+    if (ret.status === 0) {
+      message.success('授权成功！')
+      this.setState({
+        roles: [...this.state.roles],
+        authVisible: false
+      })
+    } else {
+      message.error('授权失败！')
     }
   }
 
@@ -101,7 +132,7 @@ export default class Role extends Component {
       <Card title={title}>
         <Table
           dataSource={roles}
-          columns={this.columns} 
+          columns={this.columns}
           rowKey='_id'
           bordered
           pagination={{defaultPageSize: PAGE_SIZE, showQuickJumper: true}}
@@ -128,11 +159,11 @@ export default class Role extends Component {
           title='设置角色权限'
           visible={authVisible}
           onOk={this.handleAuthRole}
-          onCancel={() => console.log(23123)}
+          onCancel={() => this.setState({authVisible: false})}
           okText='确认'
           cancelText='取消'
         >
-          <AuthForm/>
+          <AuthForm role={role} ref={this.auth}/>
         </Modal>
       </Card>
     )

@@ -55,6 +55,10 @@ export const getRoles = () => ajax('/manage/role/list')
 
 export const addRole = (roleName) => ajax('/manage/role/add', {roleName}, 'POST')
 
+// 角色授权
+
+export const updateRole = (role) => ajax('/manage/role/update', role, 'POST' )
+
 // 获取天气
 export const weatherIf = (city) => {
   return new Promise((resolve, reject) => {
