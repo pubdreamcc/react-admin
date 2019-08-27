@@ -1,5 +1,5 @@
 // 角色授权组件
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   Form,
   Input,
@@ -10,7 +10,7 @@ import propTypes from 'prop-types'
 const Item = Form.Item
 const { TreeNode } = Tree
 
-export default class AuthForm extends Component {
+export default class AuthForm extends PureComponent {
 
   static propTypes = {
     role: propTypes.object.isRequired
@@ -59,6 +59,7 @@ export default class AuthForm extends Component {
   }
 
   render() {
+    console.log('auth-form---render()')
     const {checkedKeys} = this.state
     const role = this.props.role
     const formItemLayout = {

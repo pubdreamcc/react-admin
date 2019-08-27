@@ -126,6 +126,7 @@ export default class Role extends Component {
     this.getRoles()
   }
   render() {
+    console.log('role.jsx---render()')
     const {roles, role, visible, authVisible} = this.state
     const title = (<span><Button type='primary' style={{marginRight: 15}} onClick={() => this.setState({visible: true})}>创建角色</Button><Button type='primary' disabled={!role._id} onClick={() => this.setState({authVisible: true})}>设置角色权限</Button></span>)
     return (
