@@ -12,6 +12,7 @@ import { getRoles, addRole, updateRole } from '../../api/index'
 import {PAGE_SIZE} from '../../utils/constance'
 import formatDate from '../../utils/dateUtils.js'
 import memoryUtils from '../../utils/memoryUtils.js'
+import storageUtils from '../../utils/storageUtils.js'
 export default class Role extends Component {
   state = {
     roles: [], // 所有角色列表
@@ -84,11 +85,20 @@ export default class Role extends Component {
     role.auth_name = memoryUtils.user.username
     const ret = await updateRole(role)
     if (ret.status === 0) {
-      message.success('授权成功！')
-      this.setState({
-        roles: [...this.state.roles],
-        authVisible: false
-      })
+      // 判断当前用户是否给自己的角色授权，是则强制重新登录
+      if (role._id === memoryUtils.user.role_id) {
+        // 清除数据
+        memoryUtils.user = {}
+        storageUtils.removeUser()
+        message.success('您的角色被重新授权，请重新登录！')
+        this.props.history.replace('/login')
+      } else {
+        message.success('授权成功！')
+        this.setState({
+          roles: [...this.state.roles],
+          authVisible: false
+        })
+      }
     } else {
       message.error('授权失败！')
     }
