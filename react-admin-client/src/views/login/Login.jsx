@@ -24,7 +24,7 @@ class Login extends Component {
           // 保存user数据到localStorage
           storageUtils.savaUser(result.data)
           // 登录成功，跳转路由 '/'
-          this.props.history.replace('/')
+          this.props.history.replace('/home')
         } else {
           // 登录失败，提示失败信息
           message.error(result.msg)

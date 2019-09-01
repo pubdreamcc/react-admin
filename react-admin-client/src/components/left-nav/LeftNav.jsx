@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
+import {setHeadTitle} from '../../redux/actions.js'
 import { Link, withRouter } from 'react-router-dom'
 import { Menu, Icon } from 'antd'
 import menuList from '../../config/menuConfig'
@@ -39,8 +41,11 @@ class LeftNav extends Component {
         // 做一些判断，判断当前item所对应的菜单项，当前用户是否具有权限访问，如果没有，则不显示，动态设置权限问题
         if (this.hasAuth(item)) {
           if (!item.children) {
+            if (item.key === path) {
+              this.props.setHeadTitle(item.title)
+            }
             return (
-            <Menu.Item key={item.key}>
+            <Menu.Item key={item.key} onClick={() => this.props.setHeadTitle(item.title)}>
               <Icon type={item.icon} />
               <span>{item.title}</span>
             </Menu.Item>
@@ -150,4 +155,7 @@ class LeftNav extends Component {
   }
 }
 
-export default withRouter(LeftNav)
+export default connect(
+  state => ({}),
+  {setHeadTitle}
+)(withRouter(LeftNav))
