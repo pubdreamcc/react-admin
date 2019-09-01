@@ -1,5 +1,5 @@
 // 包含多个 reducer 函数模块。
-import {SET_HEAD_TITLE} from './action-types'
+import {SET_HEAD_TITLE, RECEIVE_USER, ERROR_MSG, RESET_USER} from './action-types'
 import {combineReducers} from 'redux'
 import storageUtils from '../utils/storageUtils'
 
@@ -15,9 +15,15 @@ const setHeadTitle = (state=initHeadTitle, action) => {
 }
 
 // 管理用户数据状态的 reducer 函数
-const initUser = storageUtils.getUser()
+const initUser = storageUtils.getUser() ? storageUtils.getUser() : {}
 const user = (state=initUser, action) => {
   switch (action.type) {
+    case RECEIVE_USER:
+      return action.user
+    case ERROR_MSG:
+      return {...state, errorMsg: action.errorMsg}
+    case RESET_USER:
+      return {}
     default:
       return state
   }

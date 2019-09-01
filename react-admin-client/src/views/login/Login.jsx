@@ -1,42 +1,36 @@
 import React, { Component } from 'react'
 import {Redirect} from 'react-router-dom'
-import { Form, Icon, Input, Button, message} from 'antd'
-import storageUtils from '../../utils/storageUtils'
-import memoryUtils from '../../utils/memoryUtils'
+import {connect} from 'react-redux'
+import {login} from '../../redux/actions'
+import { Form, Icon, Input, Button} from 'antd'
+// import storageUtils from '../../utils/storageUtils'
+// import memoryUtils from '../../utils/memoryUtils'
 import './login.less'
-import { loginIf } from '../../api/index'
+// import { loginIf } from '../../api/index'
 class Login extends Component {
   handleSubmit = (e) => {
     //表单有默认提交行为，阻止事件默认行为
     e.preventDefault()
     // 统一对表单数据进行一次验证
-    this.props.form.validateFields(async (error, values) => {
+    this.props.form.validateFields((error, values) => {
       if (error) {
         console.log(error)
       } else {
         // 前台表单验证通过， 发送Ajax请求登录用户
-        const {userName, password} = values
-        // 使用 result 接收异步请求成功得到的结果，请求失败内部自己已经处理
-        const result = await loginIf({username: userName, password: password})
-        if (result.status === 0) {
-          // 保存user数据到内存
-          memoryUtils.user = result.data
-          // 保存user数据到localStorage
-          storageUtils.savaUser(result.data)
-          // 登录成功，跳转路由 '/'
+          const {userName, password} = values
+          this.props.login(userName, password)
+          // 登录成功，跳转路由 '/home'
           this.props.history.replace('/home')
-        } else {
-          // 登录失败，提示失败信息
-          message.error(result.msg)
         }
       }
-    })
+    )
   }
   render() {
-    if (memoryUtils.user._id && memoryUtils.user.username) {
-      // 用户已经登录，跳转到管理页（/）
-      return <Redirect to='/'/>
+    if (this.props.user._id && this.props.user.username) {
+      // 用户已经登录，跳转到管理页（/home）
+      return <Redirect to='/home'/>
     }
+    const errorMsg = this.props.user.errorMsg
     const {getFieldDecorator} = this.props.form
     return (
       <div className='login'>
@@ -45,6 +39,7 @@ class Login extends Component {
           <h1>后台管理系统</h1>
         </header>
         <section className='login-content'>
+          <div className={errorMsg ? 'error-msg show' : 'error-msg'}>{errorMsg}</div>
           <h2>用户登录</h2>
           <Form onSubmit={this.handleSubmit} className="login-form">
             <Form.Item>
@@ -86,4 +81,7 @@ class Login extends Component {
 }
 const WrapLogin = Form.create()(Login)
 
-export default WrapLogin
+export default connect(
+  state => ({user: state.user}),
+  {login}
+)(WrapLogin)

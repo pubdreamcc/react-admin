@@ -6,14 +6,14 @@ import{
   Modal,
   message
 } from 'antd'
+import {connect} from 'react-redux'
+import {logout} from '../../redux/actions'
 import AddForm from './add-form'
 import AuthForm from './auth-form'
 import { getRoles, addRole, updateRole } from '../../api/index'
 import {PAGE_SIZE} from '../../utils/constance'
 import formatDate from '../../utils/dateUtils.js'
-import memoryUtils from '../../utils/memoryUtils.js'
-import storageUtils from '../../utils/storageUtils.js'
-export default class Role extends Component {
+class Role extends Component {
   state = {
     roles: [], // 所有角色列表
     role: {}, // 选中的role
@@ -82,16 +82,14 @@ export default class Role extends Component {
     const {role} = this.state
     role.menus = menus
     role.auth_time = Date.now()
-    role.auth_name = memoryUtils.user.username
+    role.auth_name = this.props.user.username
     const ret = await updateRole(role)
     if (ret.status === 0) {
       // 判断当前用户是否给自己的角色授权，是则强制重新登录
-      if (role._id === memoryUtils.user.role_id) {
-        // 清除数据
-        memoryUtils.user = {}
-        storageUtils.removeUser()
+      if (role._id === this.props.user.role_id) {
+        // 强制退出
+        this.props.logout()
         message.success('您的角色被重新授权，请重新登录！')
-        this.props.history.replace('/login')
       } else {
         message.success('授权成功！')
         this.setState({
@@ -180,3 +178,8 @@ export default class Role extends Component {
     )
   }
 }
+
+export default connect(
+  state => ({user: state.user}),
+  {logout}
+)(Role)

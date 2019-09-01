@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import {connect} from 'react-redux'
+import {logout} from '../../redux/actions.js'
 import { Modal } from 'antd'
 import formatDate from '../../utils/dateUtils'
 // import menuList from '../../config/menuConfig'
 import { weatherIf } from '../../api/index'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
 import './header.less'
 const { confirm } = Modal
 class Header extends Component {
@@ -48,11 +47,7 @@ class Header extends Component {
       okText: '确定',
       cancelText: '取消',
       onOk:() => {
-        // 清除 user 数据
-        memoryUtils.user = {}
-        storageUtils.removeUser()
-        // 跳转路由到 /login
-        this.props.history.replace('/login')
+        this.props.logout()
       }
     })
   }
@@ -73,7 +68,7 @@ class Header extends Component {
     return (
       <div className='Header'>
         <div className="Header-top">
-          <span>欢迎，{memoryUtils.user.username}</span>
+          <span>欢迎，{this.props.user.username}</span>
           <button className='link-btn' onClick={this.logout}>登出</button>
         </div>
         <div className="Header-bottom">
@@ -90,5 +85,6 @@ class Header extends Component {
 }
 
 export default connect(
-  state => ({headTitle: state.setHeadTitle})
+  state => ({headTitle: state.setHeadTitle, user: state.user}),
+  {logout}
 )(withRouter(Header))

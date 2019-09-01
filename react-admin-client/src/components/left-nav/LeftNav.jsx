@@ -4,7 +4,6 @@ import {setHeadTitle} from '../../redux/actions.js'
 import { Link, withRouter } from 'react-router-dom'
 import { Menu, Icon } from 'antd'
 import menuList from '../../config/menuConfig'
-import memoryUtils from '../../utils/memoryUtils.js'
 import './leftNav.less'
 const { SubMenu } = Menu
 class LeftNav extends Component {
@@ -20,8 +19,8 @@ class LeftNav extends Component {
       4. 当前用户有此item的孩子权限，显示item和item孩子菜单项
     */
     const { key, isPublic} = item
-    const {username} = memoryUtils.user
-    const menus = memoryUtils.user.role.menus
+    const {username} = this.props.user
+    const menus = this.props.user.role.menus
     if (username === 'admin' || isPublic || menus.includes(key)) {
       return true
     } else if (item.children) {
@@ -156,6 +155,6 @@ class LeftNav extends Component {
 }
 
 export default connect(
-  state => ({}),
+  state => ({user: state.user}),
   {setHeadTitle}
 )(withRouter(LeftNav))
