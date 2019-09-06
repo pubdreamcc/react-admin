@@ -6,9 +6,13 @@
 
 * create-react-app （React脚手架）
 
+* react-redux（react 组件共享状态数据管理）
+
 * store（封装localStorage）
 
-* echarts
+* echarts （百度开源可视化图表库）
+
+* bizcharts（阿里开源可视化图表库）
 
 * react-draft-wysiwyg （React 富文本编辑器插件）
 
