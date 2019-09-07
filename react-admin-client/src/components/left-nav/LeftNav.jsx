@@ -80,6 +80,7 @@ class LeftNav extends Component {
     console.log(this.menu)
   }
   render() {
+    console.log('leftNav--render')
     const path = this.props.location.pathname.replace(/^\/product[\D]+/, '/product')
     return (
       <div className='left-nav'>

@@ -176,6 +176,7 @@ class ProductAddUpdate extends Component {
     }
     const {getFieldDecorator} = this.props.form
     const {product, isUpdate} = this
+    console.log(product)
     const {pCategoryId, categoryId, imgs, detail} = product
     const categoryIds = []
     if (isUpdate) {

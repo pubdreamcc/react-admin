@@ -4,7 +4,7 @@ import {combineReducers} from 'redux'
 import storageUtils from '../utils/storageUtils'
 
 // 设置头部标题的 reducer 函数 =》 管理 redux 中的 头部标题 状态
-const initHeadTitle = '首页'
+const initHeadTitle = ''
 const setHeadTitle = (state=initHeadTitle, action) => {
   switch (action.type) {
     case SET_HEAD_TITLE:

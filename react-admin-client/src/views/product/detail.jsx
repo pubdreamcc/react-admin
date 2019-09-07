@@ -28,6 +28,7 @@ export default class ProductDetail extends Component {
     }
   }
   render() {
+    console.log(memoryUtils.product)
     const {desc, detail, imgs, name, price} = memoryUtils.product
     const {categoryName1, categoryName2} = this.state
     const title = (<span><Button type='primary' style={{marginRight: 10}} onClick={this.props.history.goBack.bind(this)}><Icon type='arrow-left'/></Button>商品详情</span>)
